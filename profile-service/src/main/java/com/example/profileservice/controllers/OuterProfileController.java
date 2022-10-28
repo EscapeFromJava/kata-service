@@ -25,4 +25,8 @@ public class OuterProfileController {
         return new ResponseEntity<>("Profile updated successfully", HttpStatus.OK);
     }
 
+    @GetMapping("/{accountId}")
+    public ResponseEntity<ProfileResponseDto> getProfileById(@PathVariable Long accountId) {
+        return new ResponseEntity<>(profileService.getProfileByAccountId(accountId), HttpStatus.OK);
+    }
 }

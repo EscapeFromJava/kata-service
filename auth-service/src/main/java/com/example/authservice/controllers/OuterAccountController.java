@@ -36,7 +36,10 @@ public class OuterAccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> authUserWithGenerateToken(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<?> authUserWithGenerateToken(@Valid @RequestBody LoginRequestDto loginRequestDto) {
+        if (!accountService.correctPassword(loginRequestDto)) {
+            return new ResponseEntity<>("Invalid password", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(accountService.getAuthResponseDtoWithToken(loginRequestDto), HttpStatus.OK);
     }
 }

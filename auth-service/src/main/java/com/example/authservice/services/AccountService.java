@@ -53,4 +53,9 @@ public class AccountService {
         authResponseDto.setAccessToken(jwtUtil.generateAccessToken(account));
         return authResponseDto;
     }
+
+    public Boolean correctPassword(LoginRequestDto loginRequestDto) {
+        Account account = accountRepositories.findAccountByEmail(loginRequestDto.getEmail());
+        return loginRequestDto.getPassword().equals(account.getPassword());
+    }
 }
