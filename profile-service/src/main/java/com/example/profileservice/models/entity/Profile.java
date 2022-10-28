@@ -19,6 +19,10 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "account_id")
+    @NonNull
+    private Long accountId;
     @Column(name = "first_name")
     @NonNull
     private String firstName;
@@ -30,25 +34,16 @@ public class Profile {
     @NonNull
     private LocalDate birthdayDate;
 
-    public Profile(@NonNull String firstName, @NonNull String lastName, @NonNull LocalDate birthdayDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdayDate = birthdayDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Profile profile = (Profile) o;
-        return Objects.equals(id, profile.id) &&
-                firstName.equals(profile.firstName) &&
-                lastName.equals(profile.lastName) &&
-                birthdayDate.equals(profile.birthdayDate);
+        return Objects.equals(id, profile.id) && accountId.equals(profile.accountId) && firstName.equals(profile.firstName) && lastName.equals(profile.lastName) && birthdayDate.equals(profile.birthdayDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, birthdayDate);
+        return Objects.hash(id, accountId, firstName, lastName, birthdayDate);
     }
 }

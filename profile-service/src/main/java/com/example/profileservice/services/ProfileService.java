@@ -24,6 +24,7 @@ public class ProfileService {
 
     public void saveProfile(ProfileCreateRequestDto profileCreateRequestDto) {
         Profile profile = new Profile();
+        profile.setAccountId(profileCreateRequestDto.getAccountId());
         profile.setFirstName(profileCreateRequestDto.getFirstName());
         profile.setLastName(profileCreateRequestDto.getLastName());
         profile.setBirthdayDate(profileCreateRequestDto.getBirthdayDate());
@@ -32,7 +33,7 @@ public class ProfileService {
 
     public ProfileResponseDto getProfileByAccountId(Long accountId) {
         AccountResponseDto account = accountFeignClient.getAccountById(accountId).getBody();
-        Profile profile = profileRepository.findById(accountId).get();
+        Profile profile = profileRepository.findByAccountId(accountId);
 
         ProfileResponseDto profileResponseDto = new ProfileResponseDto();
         profileResponseDto.setProfileId(profile.getId());

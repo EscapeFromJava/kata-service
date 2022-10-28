@@ -3,6 +3,7 @@ package com.example.authservice.models.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -19,8 +20,9 @@ public class Account {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @NonNull
+    @Email
     private String email;
 
     @Column(name = "password")
