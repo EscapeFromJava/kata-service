@@ -1,6 +1,5 @@
 package com.example.authservice.controllers;
 
-import com.example.authservice.models.dto.AuthResponseDto;
 import com.example.authservice.models.dto.LoginRequestDto;
 import com.example.authservice.models.dto.SignupRequestDto;
 import com.example.authservice.services.AccountService;
@@ -29,7 +28,7 @@ public class OuterAccountController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> saveAccount(@RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<String> saveAccount(@Valid @RequestBody SignupRequestDto signupRequestDto) {
         accountService.saveAccount(signupRequestDto);
         profileFeignService.saveProfile(signupRequestDto);
         return new ResponseEntity<>("Account saved successfully", HttpStatus.OK);
