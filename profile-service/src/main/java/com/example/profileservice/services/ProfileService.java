@@ -55,9 +55,4 @@ public class ProfileService {
         profileFromDB.setBirthdayDate(profile.getBirthday());
         profileRepository.save(profileFromDB);
     }
-
-    public boolean isAdmin(Long accountId) {
-        AccountResponseDto account = accountFeignClient.getAccountById(accountId).getBody();
-        return account.getRole().name().equals("ADMIN");
-    }
 }

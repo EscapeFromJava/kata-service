@@ -1,10 +1,18 @@
 package com.example.authservice.models.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -33,30 +41,18 @@ public class Account {
     @NonNull
     private String roleName;
 
-    @Column(name = "first_name")
+    @Column(name = "enable")
     @NonNull
-    private String firstName;
-
-    @Column(name = "last_name")
-    @NonNull
-    private String lastName;
-
-    @Column(name = "birthday_date")
-    @NonNull
-    private LocalDate birthdayDate;
+    private Boolean enable;
 
     public Account(@NonNull String email,
                    @NonNull String password,
                    @NonNull String roleName,
-                   @NonNull String firstName,
-                   @NonNull String lastName,
-                   @NonNull LocalDate birthdayDate) {
+                   @NonNull Boolean enable) {
         this.email = email;
         this.password = password;
         this.roleName = roleName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdayDate = birthdayDate;
+        this.enable = enable;
     }
 
     @Override
@@ -64,11 +60,11 @@ public class Account {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(id, account.id) && email.equals(account.email) && password.equals(account.password) && roleName.equals(account.roleName) && firstName.equals(account.firstName) && lastName.equals(account.lastName) && birthdayDate.equals(account.birthdayDate);
+        return Objects.equals(id, account.id) && email.equals(account.email) && password.equals(account.password) && roleName.equals(account.roleName) && enable.equals(account.enable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, roleName, firstName, lastName, birthdayDate);
+        return Objects.hash(id, email, password, roleName, enable);
     }
 }

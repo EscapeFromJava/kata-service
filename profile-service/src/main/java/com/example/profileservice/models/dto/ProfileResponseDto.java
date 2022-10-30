@@ -1,5 +1,6 @@
 package com.example.profileservice.models.dto;
 
+import com.example.profileservice.models.enums.RoleNameEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 

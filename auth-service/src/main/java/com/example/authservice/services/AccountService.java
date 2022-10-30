@@ -1,41 +1,49 @@
 package com.example.authservice.services;
 
-import com.example.authservice.models.dto.AccountResponseDto;
-import com.example.authservice.models.dto.AuthResponseDto;
-import com.example.authservice.models.dto.LoginRequestDto;
-import com.example.authservice.models.dto.SignupRequestDto;
+import com.example.authservice.feign.ProfileFeignClient;
+import com.example.authservice.models.dto.*;
 import com.example.authservice.models.entity.Account;
 import com.example.authservice.models.enums.RoleNameEnum;
-import com.example.authservice.repositories.AccountRepositories;
-import com.example.authservice.security.JwtUtil;
+import com.example.authservice.repositories.AccountRepository;
+import com.example.authservice.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 public class AccountService {
 
-    private final AccountRepositories accountRepositories;
-    private final JwtUtil jwtUtil;
+    private final AccountRepository accountRepository;
+    private final ProfileFeignClient profileFeignClient;
+    private final JWTUtil jwtUtil;
 
     @Autowired
-    public AccountService(AccountRepositories accountRepositories, JwtUtil jwtUtil) {
-        this.accountRepositories = accountRepositories;
+    public AccountService(AccountRepository accountRepository, ProfileFeignClient profileFeignClient, JWTUtil jwtUtil) {
+        this.accountRepository = accountRepository;
+        this.profileFeignClient = profileFeignClient;
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public void saveAccount(SignupRequestDto signupRequestDto) {
         Account account = new Account();
         account.setEmail(signupRequestDto.getEmail());
         account.setPassword(signupRequestDto.getPassword());
         account.setRoleName(signupRequestDto.getRoleName());
-        account.setFirstName(signupRequestDto.getFirstName());
-        account.setLastName(signupRequestDto.getLastName());
-        account.setBirthdayDate(signupRequestDto.getBirthdayDate());
-        accountRepositories.save(account);
+        account.setEnable(true);
+        accountRepository.save(account);
+
+        ProfileCreateRequestDto profile = new ProfileCreateRequestDto();
+        profile.setAccountId(account.getId());
+        profile.setFirstName(signupRequestDto.getFirstName());
+        profile.setLastName(signupRequestDto.getLastName());
+        profile.setBirthdayDate(signupRequestDto.getBirthdayDate());
+        profileFeignClient.saveProfile(profile);
     }
 
     public AccountResponseDto getAccountById(Long id) {
-        Account accountFromDB = accountRepositories.findById(id).get();
+        Account accountFromDB = accountRepository.findById(id).get();
         AccountResponseDto account = new AccountResponseDto();
         account.setId(accountFromDB.getId());
         account.setEmail(accountFromDB.getEmail());
@@ -44,8 +52,8 @@ public class AccountService {
         return account;
     }
 
-    public AuthResponseDto getAuthResponseDtoWithToken(LoginRequestDto loginRequestDto) {
-        Account account = accountRepositories.findAccountByEmail(loginRequestDto.getEmail());
+    public AuthResponseDto register(LoginRequestDto loginRequestDto) {
+        Account account = accountRepository.findAccountByEmail(loginRequestDto.getEmail());
 
         AuthResponseDto authResponseDto = new AuthResponseDto();
         authResponseDto.setAccountId(account.getId());
@@ -55,7 +63,7 @@ public class AccountService {
     }
 
     public Boolean correctPassword(LoginRequestDto loginRequestDto) {
-        Account account = accountRepositories.findAccountByEmail(loginRequestDto.getEmail());
+        Account account = accountRepository.findAccountByEmail(loginRequestDto.getEmail());
         return loginRequestDto.getPassword().equals(account.getPassword());
     }
 }

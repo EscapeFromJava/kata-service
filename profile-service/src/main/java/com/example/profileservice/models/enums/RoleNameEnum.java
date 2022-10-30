@@ -1,4 +1,4 @@
-package com.example.profileservice.models.dto;
+package com.example.profileservice.models.enums;
 
 public enum RoleNameEnum {
     USER,
