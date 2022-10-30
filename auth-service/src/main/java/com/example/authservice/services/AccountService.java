@@ -48,7 +48,7 @@ public class AccountService {
         account.setId(accountFromDB.getId());
         account.setEmail(accountFromDB.getEmail());
         account.setRole(RoleNameEnum.valueOf(accountFromDB.getRoleName()));
-        account.setEnable(true);
+        account.setEnable(accountFromDB.getEnable());
         return account;
     }
 

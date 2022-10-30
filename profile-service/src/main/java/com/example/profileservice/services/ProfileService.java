@@ -49,7 +49,7 @@ public class ProfileService {
     }
 
     public void updateProfile(Long accountId, ProfileUpdateRequestDto profile) {
-        Profile profileFromDB = profileRepository.findById(accountId).get();
+        Profile profileFromDB = profileRepository.findByAccountId(accountId);
         profileFromDB.setFirstName(profile.getFirstName());
         profileFromDB.setLastName(profile.getLastName());
         profileFromDB.setBirthdayDate(profile.getBirthday());

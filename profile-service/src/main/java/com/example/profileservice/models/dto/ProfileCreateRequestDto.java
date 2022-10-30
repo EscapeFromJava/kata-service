@@ -14,10 +14,4 @@ public class ProfileCreateRequestDto {
     private String firstName;
     private String lastName;
     private LocalDate birthdayDate;
-
-    public ProfileCreateRequestDto(String firstName, String lastName, LocalDate birthdayDate) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdayDate = birthdayDate;
-    }
 }

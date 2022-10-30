@@ -1,17 +1,8 @@
 package com.example.authservice.models.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Objects;
 
@@ -44,16 +35,6 @@ public class Account {
     @Column(name = "enable")
     @NonNull
     private Boolean enable;
-
-    public Account(@NonNull String email,
-                   @NonNull String password,
-                   @NonNull String roleName,
-                   @NonNull Boolean enable) {
-        this.email = email;
-        this.password = password;
-        this.roleName = roleName;
-        this.enable = enable;
-    }
 
     @Override
     public boolean equals(Object o) {

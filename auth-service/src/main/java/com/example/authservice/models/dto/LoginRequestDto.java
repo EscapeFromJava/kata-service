@@ -3,6 +3,7 @@ package com.example.authservice.models.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.validation.constraints.Email;
 
@@ -11,6 +12,8 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 public class LoginRequestDto {
     @Email
+    @NonNull
     private String email;
+    @NonNull
     private String password;
 }

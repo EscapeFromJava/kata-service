@@ -3,7 +3,6 @@ package com.example.profileservice.security;
 import com.example.profileservice.feign.AccountFeignClient;
 import com.example.profileservice.models.dto.AccountResponseDto;
 import com.example.profileservice.models.enums.RoleNameEnum;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -14,8 +13,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -31,31 +30,40 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(AUTHORIZATION);
         if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
             String jwt = authHeader.substring(7);
             if (jwt.isBlank()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid JWT Token in Bearer Header");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token in Bearer Header");
             } else {
-                Long id = jwtUtil.validateTokenAndRetrieveClaim(jwt);
-                AccountResponseDto account = accountFeignClient.getAccountById(id).getBody();
-
-//                для API PUT /api/profile
-                Long requestAccountId = Long.parseLong(request.getHeader("accountId"));
-
-//                для API GET /api/profile
-//                Long requestAccountId = Long.parseLong(request.getParameter("accountId"));
-                if (id.equals(requestAccountId) && account.getRole().name().equals(RoleNameEnum.USER.name())) {
-                    filterChain.doFilter(request, response);
+                Long accountTokenId = jwtUtil.validateTokenAndRetrieveClaim(jwt);
+                AccountResponseDto account = accountFeignClient.getAccountById(accountTokenId).getBody();
+                if (account.getRole().name().equals(RoleNameEnum.USER.name()) && account.getEnable()) {
+                    try {
+                        Long headerId = Long.parseLong(request.getHeader("accountId"));
+                        if (accountTokenId.equals(headerId)) {
+                            filterChain.doFilter(request, response);
+                        } else {
+                            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+                        }
+                    } catch (NumberFormatException e) {
+                        try {
+                            Long parameterId = Long.parseLong(request.getParameter("accountId"));
+                            if (accountTokenId.equals(parameterId)) {
+                                filterChain.doFilter(request, response);
+                            } else {
+                                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+                            }
+                        } catch (NumberFormatException | IOException | ServletException ex) {
+                            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+                        }
+                    }
                 } else {
-                    response.setHeader("error", "Access denied");
-                    response.setStatus(403);
-                    Map<String, String> error = new HashMap<>();
-                    error.put("error_message", "Access denied");
-                    response.setContentType("application/json");
-                    new ObjectMapper().writeValue(response.getOutputStream(), error);
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
                 }
             }
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token in Bearer Header");
         }
     }
 
@@ -63,4 +71,6 @@ public class JWTFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return new AntPathMatcher().match("/api/inner/profile", request.getServletPath());
     }
+
+
 }
