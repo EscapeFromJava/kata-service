@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "27f81647-d60b-4c69-a535-181b2d7296cb",
+		"name": "kata-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21845531"
+	},
+	"item": [
+		{
+			"name": "AUTH outer POST save account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " { \r\n    \"email\":\"user@gmail.com\",\r\n     \"password\":\"password\",\r\n     \"roleName\":\"USER\",\r\n     \"firstName\":\"Ivan\",\r\n     \"lastName\":\"Ivanov\",\r\n     \"birthdayDate\":\"2000-01-01\"\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8765/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8765",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AUTH outer POST auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"user@gmail.com\",\r\n    \"password\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8765/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8765",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PROFILE outer GET profile by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2NvdW50IGRldGFpbHMiLCJyb2xlIjoiVVNFUiIsImlzcyI6ImF1dGgtc2VydmljZSIsImlkIjoxLCJleHAiOjE2NjcyMjEyODcsImlhdCI6MTY2NzEzNDg4NywiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSJ9.M8r-FPyJ7pwSK6U5wq0eDJAXGRvrzmuxvDxJgoFBRPI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8765/api/profile?accountId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8765",
+					"path": [
+						"api",
+						"profile"
+					],
+					"query": [
+						{
+							"key": "accountId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PROFILE outer POST update profile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "accountId",
+						"value": "1",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBY2NvdW50IGRldGFpbHMiLCJyb2xlIjoiVVNFUiIsImlzcyI6ImF1dGgtc2VydmljZSIsImlkIjoxLCJleHAiOjE2NjcyMjEyODcsImlhdCI6MTY2NzEzNDg4NywiZW1haWwiOiJ1c2VyQGdtYWlsLmNvbSJ9.M8r-FPyJ7pwSK6U5wq0eDJAXGRvrzmuxvDxJgoFBRPI",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\":\"Test\",\r\n    \"lastName\":\"Test\",\r\n    \"birthday\":\"10.10.1990\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8765/api/profile/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8765",
+					"path": [
+						"api",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
